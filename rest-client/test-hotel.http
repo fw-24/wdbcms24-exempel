@@ -1,5 +1,9 @@
 @apiURL = {{$dotenv WEBBKOMM_API}}:8802
 
+GET {{apiURL}}/test
+
+###
+
 GET {{apiURL}}/rooms
 
 ###
