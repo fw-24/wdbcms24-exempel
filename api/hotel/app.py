@@ -46,12 +46,19 @@ def rooms_endoint():
             'msg': f"Du har skapat ett nytt rum, id: {len(roomsTEMP)-1}!"
         }
     else:
-        return roomsTEMP
+        with conn.cursor() as cur:
+            cur.execute("SELECT * FROM hotel_room ORDER BY room_number")
+            return cur.fetchall()
 
 @app.route("/rooms/<int:id>", methods=['GET', 'PUT', 'PATCH', 'DELETE'] )
 def one_room_endpoint(id):
         if request.method == 'GET':
-            return roomsTEMP[id]
+            with conn.cursor() as cur:
+                cur.execute("""
+                    SELECT * 
+                    FROM hotel_room 
+                    WHERE id = %s""", [id])
+                return cur.fetchone()
         
 
 if __name__ == '__main__':
