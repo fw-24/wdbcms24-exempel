@@ -13,7 +13,7 @@ PORT=8802 #freddes port
 db_url = os.environ.get("DB_URL")
 print(os.environ.get("FOO"))
 
-conn = psycopg.connect(db_url, autocommit=True, row_factory=dict_row)
+conn = psycopg.connect(db_url, row_factory=dict_row)
 
 app = Flask(__name__)
 CORS(app) # Tillåt cross-origin requests
@@ -24,17 +24,11 @@ roomsTEMP = [
     { 'number': 303, 'type': "suite" }
 ]
 
-@app.route("/test", )
-def dbtest():
-    with conn.cursor() as cur:
-        cur.execute("SELECT * from people")
-        rows = cur.fetchall()
-        return rows
-        
 @app.route("/", )
 def info():
     #return "<h1>Hello, Flask!</h1>"
     return "Hotel API, endpoints /rooms, /bookings"
+
 
 @app.route("/rooms", methods=['GET', 'POST'])
 def rooms_endoint():
@@ -47,7 +41,9 @@ def rooms_endoint():
         }
     else:
         with conn.cursor() as cur:
-            cur.execute("SELECT * FROM hotel_room ORDER BY room_number")
+            cur.execute("""SELECT * 
+                        FROM hotel_room 
+                        ORDER BY room_number""")
             return cur.fetchall()
 
 @app.route("/rooms/<int:id>", methods=['GET', 'PUT', 'PATCH', 'DELETE'] )
@@ -58,8 +54,19 @@ def one_room_endpoint(id):
                     SELECT * 
                     FROM hotel_room 
                     WHERE id = %s""", [id])
+
                 return cur.fetchone()
         
+@app.route("/bookings", methods=['GET', 'POST'])
+def bookings():
+    if request.method == 'POST':
+        request_body = request.get_json()
+        print(request_body)
+        # Skapa rad i hotel_booking med sql INSERT INTO...
+        return { 
+            "msg": "APIN svarar!", 
+            "request_body": request_body 
+        }
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=PORT, debug=True, ssl_context=(
