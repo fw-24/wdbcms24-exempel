@@ -68,8 +68,8 @@
     async function createBooking() {
         // Detta ska POST:as till /bookings
         const booking = {
-            room: document.querySelector('#guest').value,
-            guest: document.querySelector('#room').value,
+            room: document.querySelector('#room').value,
+            guest: document.querySelector('#guest').value,
             datefrom: document.querySelector('#datefrom').value
         }
         console.log(booking);
@@ -79,7 +79,7 @@
             body: JSON.stringify(booking)
         })
         const respData = await resp.json();
-
+        getBookings();
         console.log(respData);
     }
 
