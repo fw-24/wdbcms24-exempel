@@ -30,6 +30,15 @@ def info():
     return "Hotel API, endpoints /rooms, /bookings"
 
 
+@app.route("/guests", methods=['GET'])
+def guests_endoint():
+    with conn.cursor() as cur:
+            cur.execute("""SELECT * 
+                        FROM hotel_guest 
+                        ORDER BY firstname""")
+            return cur.fetchall()
+
+
 @app.route("/rooms", methods=['GET', 'POST'])
 def rooms_endoint():
     if request.method == 'POST':
@@ -59,6 +68,13 @@ def one_room_endpoint(id):
         
 @app.route("/bookings", methods=['GET', 'POST'])
 def bookings():
+    if request.method == 'GET':
+        with conn.cursor() as cur:
+            cur.execute("""SELECT * 
+                        FROM hotel_booking 
+                        ORDER BY datefrom""")
+            return cur.fetchall()
+        
     if request.method == 'POST':
         request_body = request.get_json()
         print(request_body)

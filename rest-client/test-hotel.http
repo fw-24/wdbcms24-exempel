@@ -1,6 +1,6 @@
 @apiURL = {{$dotenv WEBBKOMM_API}}:8802
 
-GET {{apiURL}}/test
+GET {{apiURL}}/guests
 
 ###
 
@@ -19,3 +19,9 @@ Content-Type: application/json
     "number": 406, 
     "type": "double" 
 }
+
+###
+
+GET {{apiURL}}/bookings
+
+###
