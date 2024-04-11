@@ -13,7 +13,7 @@ PORT=8802 #freddes port
 db_url = os.environ.get("DB_URL")
 print(os.environ.get("FOO"))
 
-conn = psycopg.connect(db_url, row_factory=dict_row)
+conn = psycopg.connect(db_url, autocommit=True, row_factory=dict_row)
 
 app = Flask(__name__)
 CORS(app) # Tillåt cross-origin requests
@@ -76,13 +76,25 @@ def bookings():
             return cur.fetchall()
         
     if request.method == 'POST':
-        request_body = request.get_json()
-        print(request_body)
-        # Skapa rad i hotel_booking med sql INSERT INTO...
-        return { 
-            "msg": "APIN svarar!", 
-            "request_body": request_body 
-        }
+        body = request.get_json()
+        with conn.cursor() as cur:
+            cur.execute("""
+                INSERT INTO hotel_booking (
+                    room_id, 
+                    guest_id,
+                    datefrom
+                ) VALUES (
+                    %s, 
+                    %s, 
+                    %s
+                ) RETURNING id""", [ 
+                body['room'], 
+                body['guest'], 
+                body['datefrom'] 
+            ])
+            result = cur.fetchone()
+    
+        return { "msg": "Du har bokat ett rum!", "result": result }
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=PORT, debug=True, ssl_context=(
