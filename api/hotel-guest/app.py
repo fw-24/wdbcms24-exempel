@@ -4,6 +4,7 @@ from flask import Flask, request
 from flask_cors import CORS
 from dotenv import load_dotenv 
 
+
 # pip install psycopg_binary python-dotenv
 
 load_dotenv()
