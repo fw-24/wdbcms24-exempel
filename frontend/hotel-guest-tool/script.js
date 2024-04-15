@@ -18,13 +18,15 @@ const API_URL = "https://vm2208.kaj.pouta.csc.fi:8803"
 
             bookingsHtml += `
                 <li>${b.datefrom} Room: ${b.room_number} (${b.type})
+                <b>${b.addinfo || ''}</b>
                 <select id="stars-${b.id}">
-                    <option>*</option>
-                    <option>**</option>
-                    <option>***</option>
-                    <option>****</option>
-                    <option>******</option>
+                    <option>⭐</option>
+                    <option>⭐⭐</option>
+                    <option>⭐⭐⭐</option>
+                    <option>⭐⭐⭐⭐</option>
+                    <option>⭐⭐⭐⭐⭐</option>
                 </select>
+                
                 </li>
             `;
         }

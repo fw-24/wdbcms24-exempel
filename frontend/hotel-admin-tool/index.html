@@ -58,7 +58,7 @@
         for (b of bookings) {
             bookingsHtml += `
                 <li>${b.datefrom} Room: ${b.room_number} Guest: ${b.firstname}
-
+                    ${b.addinfo}
                     </li>
             `;
         }
