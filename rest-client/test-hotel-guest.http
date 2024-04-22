@@ -29,3 +29,15 @@ GET {{apiURL}}/bookings?api_key=asdasda
 GET {{apiURL}}/bookings
 
 ###
+
+PUT {{apiURL}}/bookings/1?api_key=asdasda&foo=bar&greeting=hello
+
+###
+PUT {{apiURL}}/bookings/10?api_key={{api_key}}
+Content-Type: application/json
+
+{ 
+    "stars": 4
+}
+
+###

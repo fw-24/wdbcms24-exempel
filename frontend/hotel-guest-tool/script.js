@@ -10,6 +10,7 @@ if (!API_KEY) {
 
 async function getBookings() {
 
+   
     const resp = await fetch(`${API_URL}/bookings?api_key=${API_KEY}`);
     const bookings = await resp.json();
 
