@@ -20,6 +20,15 @@ conn = psycopg.connect(db_url, autocommit=True, row_factory=dict_row)
 app = Flask(__name__)
 CORS(app) # Tillåt cross-origin requests
 
+# Funktion som hittar guest_id på basis av api_key
+def check_key(api_key):
+    with conn.cursor() as cur:
+        cur.execute("""
+            SELECT id 
+            FROM hotel_guest
+            WHERE api_key = %s""", [ api_key])
+        return cur.fetchone()['id']
+
 
 @app.route("/", )
 def info():
@@ -48,22 +57,12 @@ def one_room_endpoint(id):
         
 @app.route("/bookings", methods=['GET', 'POST'])
 def bookings():
-    api_key = request.args.get('api_key')
-    guest_id = None
 
-    if not api_key:
-        return { "msg": "ERROR: api_key missing!" }, 401
-
-    with conn.cursor() as cur:
-        cur.execute("""
-            SELECT id 
-            FROM hotel_guest
-            WHERE api_key = %s""", [ api_key])
-        guest = cur.fetchone()
-        if not guest:
-            return { "msg": "ERROR: bad api_key!" }, 403
-    
-        guest_id = guest['id']
+    try:
+        # funtionen returnerar guest.id om api_key stämmer
+        guest_id = check_key(request.args.get('api_key'))
+    except:
+        return { "msg": "ERROR: bad api_key!" }, 403
 
     if request.method == 'GET':
         with conn.cursor() as cur:
@@ -110,6 +109,40 @@ def bookings():
             result = cur.fetchone()
     
         return { "msg": "Du har bokat ett rum!", "result": result }
+
+@app.route("/bookings/<int:id>", methods=['PUT','DELETE'])
+def one_booking(id):
+
+    # request.args är URL-parametrarna
+    api_key = request.args.get('api_key')
+    body = request.get_json()
+
+    try:
+        # funtionen returnerar guest.id om api_key stämmer
+        guest_id = check_key(api_key)
+    except:
+        return { "msg": "ERROR: bad api_key!" }, 403
+
+    with conn.cursor() as cur:
+        cur.execute("""
+            UPDATE hotel_booking SET
+                stars = %s
+            WHERE id = %s
+                AND guest_id = %s
+            RETURNING id""", [
+                body['stars'], 
+                id, 
+                guest_id
+            ])
+        result = cur.fetchone()
+    
+    if result:
+        return { "msg": "booking updated!", "result": result}
+    else:
+        return { "msg": "ERROR: not updated" }, 400
+
+    
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=PORT, debug=True, ssl_context=(
