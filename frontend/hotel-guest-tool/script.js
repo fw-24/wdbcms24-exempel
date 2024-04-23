@@ -22,15 +22,15 @@ async function getBookings() {
 
         bookingsHtml += `
             <li>${b.id} - ${b.datefrom} Room: ${b.room_number} (${b.type}) 
-            <b>${b.addinfo || ''}</b>
-            
-            <select id="stars-${b.id}" onchange="updateStars(${b.id})">
-                <option value="1" ${(b.stars == 1) ? 'selected' : ''}>⭐</option>
-                <option value="2" ${(b.stars == 2) ? 'selected' : ''}>⭐⭐</option>
-                <option value="3" ${(b.stars == 3) ? 'selected' : ''}>⭐⭐⭐</option>
-                <option value="4" ${(b.stars == 4) ? 'selected' : ''}>⭐⭐⭐⭐</option>
-                <option value="5" ${(b.stars == 5) ? 'selected' : ''}>⭐⭐⭐⭐⭐</option>
-            </select>
+                <b>${b.addinfo || ''}</b>
+                
+                <select id="stars-${b.id}" onchange="updateStars(${b.id})">
+                    <option value="1" ${(b.stars == 1) ? 'selected' : ''}>⭐</option>
+                    <option value="2" ${(b.stars == 2) ? 'selected' : ''}>⭐⭐</option>
+                    <option value="3" ${(b.stars == 3) ? 'selected' : ''}>⭐⭐⭐</option>
+                    <option value="4" ${(b.stars == 4) ? 'selected' : ''}>⭐⭐⭐⭐</option>
+                    <option value="5" ${(b.stars == 5) ? 'selected' : ''}>⭐⭐⭐⭐⭐</option>
+                </select>
             
             </li>
         `;
