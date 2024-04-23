@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Min hemsida</title>
+</head>
+<body>
+    <h1 id="page-title"></h1>
+    <div id="page-content"></div>
+
+    <script>
+    const API_URL = 'http://localhost:10004/wp-json'; 
+
+    async function getPage(page_id) {
+        const res = await fetch(`${API_URL}/wp/v2/pages/${page_id}`);
+        const page = await res.json();
+
+        document.querySelector('#page-title').innerHTML = page.title.rendered;
+        document.querySelector('#page-content').innerHTML = page.content.rendered;
+        console.log(page)
+
+    };
+    getPage(6);
+
+    </script>
+</body>
+</html>
